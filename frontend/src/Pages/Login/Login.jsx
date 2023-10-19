@@ -10,8 +10,20 @@ import {
     Stack,
     Image,
 } from '@chakra-ui/react'
-
+import { useState } from 'react'
+import { FcGoogle } from 'react-icons/fc'
+import { useDispatch, useSelector } from 'react-redux';
+import { login } from '../../Redux/AuthReducer/action';
 export default function Login() {
+    const [email, setEmial] = useState("");
+    const [pass, setPass] = useState("");
+    const dispatch = useDispatch();
+    const isAuth = useSelector(st => st.AuthReducer);
+    console.log(isAuth);
+    const handleSubmit = () => {
+        console.log(email, pass);
+        dispatch(login({ email, pass }));
+    }
     return (
         <Stack minH={'100vh'} direction={{ base: 'column', md: 'row' }}>
             <Flex p={8} flex={1} align={'center'} justify={'center'}>
@@ -21,11 +33,11 @@ export default function Login() {
                     <Heading fontSize={'2xl'}>Sign in to your account</Heading>
                     <FormControl id="email">
                         <FormLabel>Email address</FormLabel>
-                        <Input type="email" />
+                        <Input type="email" value={email} onChange={(e) => setEmial(e.target.value)} placeholder='Enter Your Email' />
                     </FormControl>
                     <FormControl id="password">
                         <FormLabel>Password</FormLabel>
-                        <Input type="password" />
+                        <Input type="password" value={pass} onChange={(e) => setPass(e.target.value)} placeholder='Enter your password' />
                     </FormControl>
                     <Stack spacing={6}>
                         <Stack
@@ -35,8 +47,13 @@ export default function Login() {
                             <Checkbox>Remember me</Checkbox>
                             <Text color={'blue.500'}>Forgot password?</Text>
                         </Stack>
-                        <Button colorScheme={'blue'} variant={'solid'}>
+                        <Button colorScheme={'blue'} variant={'solid'} onClick={handleSubmit}>
                             Sign in
+                        </Button>
+                        <Button colorScheme={'red'} variant={'solid'}>
+                            <Flex justifyContent={"center"} gap={5}>
+                                <FcGoogle width={"40px"} /><Text>Contine With Google</Text>
+                            </Flex>
                         </Button>
                     </Stack>
                 </Stack>

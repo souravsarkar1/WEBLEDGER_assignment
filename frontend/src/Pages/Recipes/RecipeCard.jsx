@@ -1,5 +1,3 @@
-'use client'
-
 import { useState } from 'react'
 import {
   Box,
@@ -10,12 +8,22 @@ import {
   useColorModeValue,
   HStack,
   Container,
+  useToast,
 } from '@chakra-ui/react'
 import { BsArrowUpRight, BsHeartFill, BsHeart } from 'react-icons/bs'
+import { useDispatch, useSelector } from 'react-redux'
+import { addRecipeFvt } from '../../Redux/RecipeReducer/action'
 
-export default function RecipeCard({ image, title, nutrition }) {
+export default function RecipeCard({ image, title, nutrition, id, imageType }) {
   const [liked, setLiked] = useState(false)
-
+  const token = useSelector(st => st.AuthReducer.token);
+  const dispatch = useDispatch();
+  const toast = useToast();
+  const handleButton = () => {
+    dispatch(addRecipeFvt({ image, title, nutrition, id, imageType }, token,toast));
+    console.log(token);
+    console.log("clicked");
+  }
   return (
     <Center py={6}>
       <Box
@@ -68,8 +76,8 @@ export default function RecipeCard({ image, title, nutrition }) {
             roundedBottom={'sm'}
             cursor={'pointer'}
             w="full">
-            <Text fontSize={'md'} fontWeight={'semibold'}>
-              View more
+            <Text fontSize={'md'} fontWeight={'semibold'} onClick={handleButton}>
+              Add To Favorite
             </Text>
             <BsArrowUpRight />
           </Flex>
