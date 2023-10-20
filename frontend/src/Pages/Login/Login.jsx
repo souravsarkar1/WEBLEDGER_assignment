@@ -9,20 +9,45 @@ import {
     Input,
     Stack,
     Image,
+    useToast,
 } from '@chakra-ui/react'
 import { useState } from 'react'
 import { FcGoogle } from 'react-icons/fc'
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../../Redux/AuthReducer/action';
+import ButtonLoader from '../../Components/Loader/ButtonLoader';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 export default function Login() {
     const [email, setEmial] = useState("");
     const [pass, setPass] = useState("");
     const dispatch = useDispatch();
+    const loading = useSelector(st => st.AuthReducer.isLoginLoading);
     const isAuth = useSelector(st => st.AuthReducer);
+    const toast = useToast();
+    const navigate = useNavigate();
+    const location = useLocation();
+
+
+
     console.log(isAuth);
     const handleSubmit = () => {
-        console.log(email, pass);
-        dispatch(login({ email, pass }));
+        if (!email || !pass) {
+            toast({
+                title: 'Invalid credentials',
+                description: "Please enter your email address and password",
+                status: 'error',
+                duration: 2000,
+                isClosable: true,
+                position: "top"
+            })
+            return;
+        } else {
+            console.log(email, pass);
+            dispatch(login({ email, pass }, toast)).then((res) => {
+                navigate(location.state)
+            });
+        }
+
     }
     return (
         <Stack minH={'100vh'} direction={{ base: 'column', md: 'row' }}>
@@ -48,13 +73,17 @@ export default function Login() {
                             <Text color={'blue.500'}>Forgot password?</Text>
                         </Stack>
                         <Button colorScheme={'blue'} variant={'solid'} onClick={handleSubmit}>
-                            Sign in
+                            {loading ? <ButtonLoader /> : " Login"}
                         </Button>
                         <Button colorScheme={'red'} variant={'solid'}>
                             <Flex justifyContent={"center"} gap={5}>
                                 <FcGoogle width={"40px"} /><Text>Contine With Google</Text>
                             </Flex>
                         </Button>
+                        <Button colorScheme={'green'} variant={'solid'}>
+                            <Link to={'/signup'}>No Account Create a Account</Link>
+                        </Button>
+
                     </Stack>
                 </Stack>
             </Flex>

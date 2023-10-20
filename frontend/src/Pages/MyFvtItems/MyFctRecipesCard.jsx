@@ -12,31 +12,16 @@ import {
 } from '@chakra-ui/react'
 import { BsArrowUpRight, BsHeartFill, BsHeart } from 'react-icons/bs'
 import { useDispatch, useSelector } from 'react-redux'
-import { addRecipeFvt } from '../../Redux/RecipeReducer/action'
-import { useNavigate } from 'react-router-dom'
+import { deleteMyRecipes } from '../../Redux/RecipeReducer/action'
 
-export default function RecipeCard({ image, title, nutrition, id, imageType }) {
+export default function MyRecipeCard({ image, title, nutrition, _id, }) {
   const [liked, setLiked] = useState(false)
   const token = useSelector(st => st.AuthReducer.token);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const toast = useToast();
+  console.log(token);
   const handleButton = () => {
-    if (!token) {
-      toast({
-        title: 'Please Login',
-        description: "Please Login",
-        status: 'success',
-        duration: 9000,
-        isClosable: true,
-        position : "top"
-      })
-      navigate("/login");
-      setLiked(true);
-    }else{
-      dispatch(addRecipeFvt({ image, title, nutrition, id, imageType }, token,toast));
-    }
-    
+    dispatch(deleteMyRecipes(_id, token, toast));
   }
   return (
     <Center py={6}>
@@ -91,7 +76,7 @@ export default function RecipeCard({ image, title, nutrition, id, imageType }) {
             cursor={'pointer'}
             w="full">
             <Text fontSize={'md'} fontWeight={'semibold'} onClick={handleButton}>
-              Add To Favorite
+              Delete From Favorite
             </Text>
             <BsArrowUpRight />
           </Flex>

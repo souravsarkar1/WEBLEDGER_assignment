@@ -10,23 +10,43 @@ import {
     Image,
     InputGroup,
     InputRightElement,
+    useToast,
 } from '@chakra-ui/react'
 import { useState } from 'react'
 import { FcGoogle } from 'react-icons/fc'
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { register } from '../../Redux/AuthReducer/action'
+import ButtonLoader from '../../Components/Loader/ButtonLoader'
+import { Link, useNavigate } from 'react-router-dom'
 export default function Signup() {
     const [showPassword, setShowPassword] = useState(false)
     const [formData, setFormData] = useState({ email: '', pass: '', age: "", name: "" });
     const dispatch = useDispatch();
+    const toast = useToast();
+    const isSignupLoading = useSelector(st=>st.AuthReducer.isSignupLoading);
+    const navigation = useNavigate();
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
     const handleSubmit = () => {
         console.log(formData);
-        dispatch(register(formData));
+        if (!formData.email || !formData.pass || !formData.age || !formData.name) {
+            toast({
+                title: 'Please fill all the filed',
+                description: "Fill all the filed",
+                status: 'error',
+                duration: 2000,
+                isClosable: true,
+                position : "top"
+              })
+        } else {
+            dispatch(register(formData,toast)).then((res)=>{
+                navigation("/login")
+            })
+        }
+        
     }
     return (
         <Stack minH={'100vh'} direction={{ base: 'column', md: 'row' }}>
@@ -40,8 +60,8 @@ export default function Signup() {
                         <Input type="text" value={formData.name} name='name' onChange={handleInputChange} placeholder='Enter Your Email' />
                     </FormControl>
                     <FormControl id="email">
-                        <FormLabel>Name</FormLabel>
-                        <Input type="text" value={formData.age} name='age' onChange={handleInputChange} placeholder='Enter Your Email' />
+                        <FormLabel>Age</FormLabel>
+                        <Input type="text" value={formData.age} name='age' onChange={handleInputChange} placeholder='Enter Your Age' />
                     </FormControl>
                     <FormControl id="email">
                         <FormLabel>Email address</FormLabel>
@@ -63,12 +83,15 @@ export default function Signup() {
                     <Stack spacing={6}>
 
                         <Button colorScheme={'blue'} variant={'solid'} onClick={handleSubmit}>
-                            Sign in
+                           {isSignupLoading ? <ButtonLoader/> : " Sign in"}
                         </Button>
                         <Button colorScheme={'red'} variant={'solid'}>
                             <Flex justifyContent={"center"} gap={5}>
                                 <FcGoogle width={"40px"} /><Text>Contine With Google</Text>
                             </Flex>
+                        </Button>
+                        <Button colorScheme={'green'} variant={'solid'}>
+                            <Link to={"login"}>Already Have A Account? Login!</Link>
                         </Button>
                     </Stack>
                 </Stack>

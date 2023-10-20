@@ -16,6 +16,7 @@ import {
     InputGroup,
     InputLeftElement,
     Textarea,
+    useToast,
 } from '@chakra-ui/react'
 import {
     MdPhone,
@@ -25,8 +26,29 @@ import {
     MdOutlineEmail,
 } from 'react-icons/md'
 import { BsGithub, BsDiscord, BsPerson } from 'react-icons/bs'
+import { useState } from 'react'
+import ButtonLoader from '../../Components/Loader/ButtonLoader';
 
 export default function Contact() {
+    const [loading, setLoading] = useState(false);
+    const toast = useToast();
+
+    const hanldeButton = () => {
+        setLoading(true);
+        setTimeout(() => {
+            setLoading(false);
+        }, 2000);
+        toast({
+            title: 'Message Sending',
+            description: "Message Sending completed successfully",
+            status: 'success',
+            duration: 2000,
+            isClosable: true,
+            position: "top"
+        })
+    }
+
+
     return (
         <Container maxW="full" mt={0} centerContent overflow="hidden">
             <br />
@@ -147,8 +169,8 @@ export default function Contact() {
                                                 />
                                             </FormControl>
                                             <FormControl id="name" float="right">
-                                                <Button variant="solid" bg="#0D74FF" color="white" _hover={{}}>
-                                                    Send Message
+                                                <Button variant="solid" onClick={hanldeButton} bg="#0D74FF" color="white" _hover={{}}>
+                                                    {loading ? <ButtonLoader /> : "Send me a message"}
                                                 </Button>
                                             </FormControl>
                                         </VStack>

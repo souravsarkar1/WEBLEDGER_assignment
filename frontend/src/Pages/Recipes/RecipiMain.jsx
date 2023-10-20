@@ -18,9 +18,10 @@ const RecipiMain = () => {
       setLoader(true);
       axios
         .get(
-          `https://api.spoonacular.com/recipes/complexSearch?query=${searchTerm}&maxFat=250&number=200&apiKey=85a7dcf9acf5476eba0fc6eb2bfd879d&sort=${option}`
+          `https://api.spoonacular.com/recipes/complexSearch?query=${searchTerm}&maxFat=250&number=200&apiKey=b2db2a372d9d41baa5f9205f1dbd866c&sort=${option}`
         )
         .then((res) => {
+          console.log(res.data.results);
           setRecipes(res.data.results);
         })
         .catch((err) => {

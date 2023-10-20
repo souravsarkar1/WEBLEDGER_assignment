@@ -1,4 +1,5 @@
  export const options = [
+    "--Sort By--",
     'meta-score',
     'popularity',
     'healthiness',

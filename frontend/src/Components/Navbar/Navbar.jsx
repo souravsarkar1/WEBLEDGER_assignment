@@ -1,3 +1,6 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import {
     Box,
     Flex,
@@ -13,22 +16,52 @@ import {
     useColorModeValue,
     useBreakpointValue,
     useDisclosure,
-} from '@chakra-ui/react'
+    useToast,
+} from '@chakra-ui/react';
 import {
     HamburgerIcon,
     CloseIcon,
     ChevronDownIcon,
     ChevronRightIcon,
-} from '@chakra-ui/icons'
-import { Link } from 'react-router-dom'
+} from '@chakra-ui/icons';
+import { logout } from '../../Redux/AuthReducer/action';
+import { removeMyData } from '../../Redux/RecipeReducer/action';
+
+const NAV_ITEMS = [
+    {
+        label: 'Recipes',
+        href: 'recipes'
+    },
+    {
+        label: 'My Food',
+        children: [
+            {
+                label: 'My Favorite Foods',
+                subLabel: 'Foods from your favorite',
+                href: 'myfood',
+            },
+        ],
+    },
+    {
+        label: 'Contact Us',
+        href: 'contact',
+    }
+];
 
 export default function Navbar() {
-    const { isOpen, onToggle } = useDisclosure()
+    const { isOpen, onToggle } = useDisclosure();
+    const isAuth = useSelector(st => st.AuthReducer.isAuth);
+    const dispatch = useDispatch();
+    const toast = useToast();
+    const handleLogout = () => {
+        dispatch(logout(toast));
+        dispatch(removeMyData());
+    };
 
     return (
         <Box>
             <Flex
-                bg={useColorModeValue('white', 'gray.800')}
+                bg={useColorModeValue('gray.100', 'gray.800')}
                 color={useColorModeValue('gray.600', 'white')}
                 minH={'60px'}
                 py={{ base: 2 }}
@@ -40,7 +73,6 @@ export default function Navbar() {
                 position={"fixed"}
                 w={"100%"}
                 zIndex={"1000"}
-
             >
                 <Flex
                     flex={{ base: 1, md: 'auto' }}
@@ -58,9 +90,8 @@ export default function Navbar() {
                         textAlign={useBreakpointValue({ base: 'center', md: 'left' })}
                         fontFamily={'heading'}
                         color={useColorModeValue('gray.800', 'white')}>
-                        <Link to={'/'}> 𝔽𝕠𝕠𝕕-ℝ𝕖𝕔𝕚𝕡𝕖𝕤</Link>
+                        <Link to={'/'}>𝔽𝕠𝕠𝕕-ℝ𝕖𝕔𝕚𝕡𝕖𝕤</Link>
                     </Text>
-
                     <Flex display={{ base: 'none', md: 'flex' }} ml={10}>
                         <DesktopNav />
                     </Flex>
@@ -71,38 +102,46 @@ export default function Navbar() {
                     justify={'flex-end'}
                     direction={'row'}
                     spacing={6}>
-                    <Link to={'/login'}>
-                    <Button
-
-                    display={{ base: 'none', md: 'inline-flex' }}
-                    fontSize={'sm'}
-                    fontWeight={600}
-                    color={'white'}
-                    bg={'pink.400'}
-
-                    _hover={{
-                        bg: 'pink.300',
-                    }}>
-                    Login
-                </Button>
-                    </Link>
-
-                    <Link to={'/signup'}>
+                    {isAuth ? (
                         <Button
-
-                            display={{ base: 'none', md: 'inline-flex' }}
                             fontSize={'sm'}
                             fontWeight={600}
                             color={'white'}
                             bg={'pink.400'}
-
                             _hover={{
                                 bg: 'pink.300',
-                            }}>
-                            Sign Up
+                            }}
+                            onClick={handleLogout}>
+                            Log Out
                         </Button>
-                    </Link>
-
+                    ) : (
+                        <>
+                            <Link to={'/login'}>
+                                <Button
+                                    fontSize={'sm'}
+                                    fontWeight={600}
+                                    color={'white'}
+                                    bg={'pink.400'}
+                                    _hover={{
+                                        bg: 'pink.300',
+                                    }}>
+                                    Login
+                                </Button>
+                            </Link>
+                            <Link to={'/signup'}>
+                                <Button
+                                    fontSize={'sm'}
+                                    fontWeight={600}
+                                    color={'white'}
+                                    bg={'pink.400'}
+                                    _hover={{
+                                        bg: 'pink.300',
+                                    }}>
+                                    Sign Up
+                                </Button>
+                            </Link>
+                        </>
+                    )}
                 </Stack>
             </Flex>
 
@@ -110,13 +149,13 @@ export default function Navbar() {
                 <MobileNav />
             </Collapse>
         </Box>
-    )
+    );
 }
 
 const DesktopNav = () => {
-    const linkColor = useColorModeValue('gray.600', 'gray.200')
-    const linkHoverColor = useColorModeValue('gray.800', 'white')
-    const popoverContentBgColor = useColorModeValue('white', 'gray.800')
+    const linkColor = useColorModeValue('gray.600', 'gray.200');
+    const linkHoverColor = useColorModeValue('gray.800', 'white');
+    const popoverContentBgColor = useColorModeValue('white', 'gray.800');
 
     return (
         <Stack direction={'row'} spacing={4}>
@@ -125,7 +164,6 @@ const DesktopNav = () => {
                     <Popover trigger={'hover'} placement={'bottom-start'}>
                         <PopoverTrigger>
                             <Link
-                                
                                 p={2}
                                 to={navItem.href ?? '#'}
                                 fontSize={'sm'}
@@ -158,13 +196,12 @@ const DesktopNav = () => {
                 </Box>
             ))}
         </Stack>
-    )
+    );
 }
 
 const DesktopSubNav = ({ label, href, subLabel }) => {
     return (
         <Link
-            
             to={href}
             role={'group'}
             display={'block'}
@@ -193,27 +230,29 @@ const DesktopSubNav = ({ label, href, subLabel }) => {
                 </Flex>
             </Stack>
         </Link>
-    )
+    );
 }
 
 const MobileNav = () => {
     return (
         <Stack bg={useColorModeValue('white', 'gray.800')} p={4} display={{ md: 'none' }}>
+            <br />
+            <br />
+            <br />
             {NAV_ITEMS.map((navItem) => (
                 <MobileNavItem key={navItem.label} {...navItem} />
             ))}
         </Stack>
-    )
+    );
 }
 
 const MobileNavItem = ({ label, children, href }) => {
-    const { isOpen, onToggle } = useDisclosure()
+    const { isOpen, onToggle } = useDisclosure();
 
     return (
         <Stack spacing={4} onClick={children && onToggle}>
             <Link
                 py={2}
-                
                 to={href ?? '#'}
                 justifyContent="space-between"
                 alignItems="center"
@@ -244,35 +283,12 @@ const MobileNavItem = ({ label, children, href }) => {
                     align={'start'}>
                     {children &&
                         children.map((child) => (
-                            <Link  key={child.label} py={2} to={child.href}>
+                            <Link key={child.label} py={2} to={child.href}>
                                 {child.label}
                             </Link>
                         ))}
                 </Stack>
             </Collapse>
         </Stack>
-    )
+    );
 }
-
-
-
-const NAV_ITEMS = [
-    {
-        label: 'Recipes',
-        href : "recipes"
-    },
-    {
-        label: 'My Food',
-        children: [
-            {
-                label: 'My Favorite Foods',
-                subLabel: 'Foods from your favorite',
-                href: 'myfood',
-            },
-        ],
-    },
-    {
-        label: 'Contact Us',
-        href: 'contact',
-    }
-]
