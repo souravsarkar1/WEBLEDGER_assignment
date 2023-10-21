@@ -1,4 +1,4 @@
-# webleader_assignment
+
 # WebLeader Assignment
 
 This repository contains the code for the WebLeader coding assignment. The assignment is a web application implemented using [insert technologies/frameworks used, e.g., React, Node.js, Express].
