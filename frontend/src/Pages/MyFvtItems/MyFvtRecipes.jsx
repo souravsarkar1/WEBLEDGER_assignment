@@ -13,6 +13,7 @@ const MyFvtRecipes = () => {
   const myRecipeLoading = useSelector(st => st.RecipeReducer.myRecipeLoading);
   console.log(data);
   const dispatch = useDispatch();
+  console.log(token);
   useEffect(() => {
     dispatch(getMyRecipes(token))
   }, [dispatch, token]);

@@ -45,7 +45,7 @@ export const addRecipeFvt = (data, token, toast) => (dispatch) => {
             position: 'top',
         })
     }).catch((err) => {
-      //  console.log(err.message);
+        console.log(err);
         dispatch({ type: ADD_RECIPES_FAIL })
         toast({
             title: 'Something Went to wrong',

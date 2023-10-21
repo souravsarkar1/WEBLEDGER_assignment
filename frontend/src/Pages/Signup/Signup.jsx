@@ -13,10 +13,10 @@ import {
     useToast,
 } from '@chakra-ui/react'
 import { useState } from 'react'
-import { FcGoogle } from 'react-icons/fc'
+import { AiFillGithub } from 'react-icons/ai'
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 import { useDispatch, useSelector } from 'react-redux'
-import { register } from '../../Redux/AuthReducer/action'
+import { githubAuth, register } from '../../Redux/AuthReducer/action'
 import ButtonLoader from '../../Components/Loader/ButtonLoader'
 import { Link, useNavigate } from 'react-router-dom'
 export default function Signup() {
@@ -30,6 +30,7 @@ export default function Signup() {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
+    //to={'https://github.com/login/oauth/authorize?client_id=35b6f2085fc9c793b59d&scope=user:email'}
     const handleSubmit = () => {
         console.log(formData);
         if (!formData.email || !formData.pass || !formData.age || !formData.name) {
@@ -48,6 +49,11 @@ export default function Signup() {
         }
         
     }
+
+    const handleGithubAuth = () => {
+        dispatch(githubAuth(toast));
+    }
+
     return (
         <Stack minH={'100vh'} direction={{ base: 'column', md: 'row' }}>
             <Flex p={8} flex={1} align={'center'} justify={'center'}>
@@ -85,13 +91,15 @@ export default function Signup() {
                         <Button colorScheme={'blue'} variant={'solid'} onClick={handleSubmit}>
                            {isSignupLoading ? <ButtonLoader/> : " Sign in"}
                         </Button>
-                        <Button colorScheme={'red'} variant={'solid'}>
-                            <Flex justifyContent={"center"} gap={5}>
-                                <FcGoogle width={"40px"} /><Text>Contine With Google</Text>
+                        <Button colorScheme={'red'} variant={'solid'} onClick={handleGithubAuth}>
+                            <a href={'https://github.com/login/oauth/authorize?client_id=35b6f2085fc9c793b59d&scope=user:email'}>                                <Flex justifyContent={"center"} gap={5}>
+                                <AiFillGithub width={"40px"} /><Text>Contine With GitHub</Text>
                             </Flex>
+                            </a>
+
                         </Button>
                         <Button colorScheme={'green'} variant={'solid'}>
-                            <Link to={"login"}>Already Have A Account? Login!</Link>
+                            <Link to={"/login"}>Already Have A Account? Login!</Link>
                         </Button>
                     </Stack>
                 </Stack>

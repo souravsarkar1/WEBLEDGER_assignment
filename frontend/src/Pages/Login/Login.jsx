@@ -12,9 +12,9 @@ import {
     useToast,
 } from '@chakra-ui/react'
 import { useState } from 'react'
-import { FcGoogle } from 'react-icons/fc'
+import { AiFillGithub } from 'react-icons/ai'
 import { useDispatch, useSelector } from 'react-redux';
-import { login } from '../../Redux/AuthReducer/action';
+import { githubAuth, login } from '../../Redux/AuthReducer/action';
 import ButtonLoader from '../../Components/Loader/ButtonLoader';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 export default function Login() {
@@ -22,7 +22,7 @@ export default function Login() {
     const [pass, setPass] = useState("");
     const dispatch = useDispatch();
     const loading = useSelector(st => st.AuthReducer.isLoginLoading);
-    const isAuth = useSelector(st => st.AuthReducer);
+    const isAuth = useSelector(st => st.AuthReducer.isAuth);
     const toast = useToast();
     const navigate = useNavigate();
     const location = useLocation();
@@ -49,6 +49,11 @@ export default function Login() {
         }
 
     }
+
+    const handleGithubAuth = () => {
+        dispatch(githubAuth(toast));
+    }
+
     return (
         <Stack minH={'100vh'} direction={{ base: 'column', md: 'row' }}>
             <Flex p={8} flex={1} align={'center'} justify={'center'}>
@@ -75,10 +80,12 @@ export default function Login() {
                         <Button colorScheme={'blue'} variant={'solid'} onClick={handleSubmit}>
                             {loading ? <ButtonLoader /> : " Login"}
                         </Button>
-                        <Button colorScheme={'red'} variant={'solid'}>
-                            <Flex justifyContent={"center"} gap={5}>
-                                <FcGoogle width={"40px"} /><Text>Contine With Google</Text>
+                        <Button colorScheme={'red'} variant={'solid'} onClick={handleGithubAuth}>
+                            <a href={'https://github.com/login/oauth/authorize?client_id=35b6f2085fc9c793b59d&scope=user:email'}>                                <Flex justifyContent={"center"} gap={5}>
+                                <AiFillGithub width={"40px"} /><Text>Contine With GitHub</Text>
                             </Flex>
+                            </a>
+
                         </Button>
                         <Button colorScheme={'green'} variant={'solid'}>
                             <Link to={'/signup'}>No Account Create a Account</Link>

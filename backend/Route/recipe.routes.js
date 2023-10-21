@@ -6,10 +6,6 @@ const recipeRouter = express.Router();
 
 recipeRouter.post('/addrecipe', auth, async (req, res) => {
     try {
-        const { img1, img2, recipiName, recipiDescription, chefeName, chefeId } = req.body;
-        if (!img1 || !img2 || !recipiName || !recipiDescription || !chefeName || !chefeId) {
-            return res.status(400).json({ msg: "add all the fields" });
-        }
         const newRecipi = new RecipeModel(req.body)
         await newRecipi.save();
         res.status(200).json({ msg: "new recipe is added successfully", newRecipi })
@@ -30,8 +26,10 @@ recipeRouter.get('/allrecipe', async (req, res) => {
 })
 
 recipeRouter.get("/myrecipe", auth, async (req, res) => {
+
     try {
-        const data = await RecipeModel.find(req.body.uerId);
+        const { chefeId } = req.body;
+        const data = await RecipeModel.find({ chefeId });
         res.status(200).json({ data });
     } catch (error) {
         console.error(error);
@@ -39,13 +37,29 @@ recipeRouter.get("/myrecipe", auth, async (req, res) => {
     }
 });
 
-recipeRouter.get("/allrecipe/sort/:order",async(req,res)=>{
+// recipeRouter.get("/myrecipe/sort/:order", auth, async (req, res) => {
+//     try {
+
+//     } catch (error) {
+//         console.error(error);
+//         return res.status(500).json({ error: 'Internal Server Error' });
+//     }
+// })
+
+recipeRouter.delete("/myrecipe/delete/:dataId", auth, async (req, res) => {
+    const { dataId } = req.params;
     try {
-        
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ error: 'Internal Server Error' });
+        const isExistRecipe = await RecipeModel.findOne({ _id: dataId });
+        if (isExistRecipe) {
+            await RecipeModel.findByIdAndDelete(dataId);
+            res.status(200).json({ msg: 'The data has been deleted' });
+        } else {
+            res.status(400).json({ msg: "Invalid id" })
+        }
+
+    } catch (err) {
+        console.log(err);
+        res.status(400).json({ err: err.message });
     }
 })
-
 module.exports = { recipeRouter };

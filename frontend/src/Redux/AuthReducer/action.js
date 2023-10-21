@@ -1,4 +1,4 @@
-import { LOGIN_FAIL, LOGIN_REQUEST, LOGIN_SUCCESS, LOGOUT, REGISTER_FAIL, REGISTER_REQUEST, REGISTER_SUCCESS } from "./actionTypes";
+import { LOGIN_FAIL, LOGIN_FAIL_GITHUB, LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_SUCCESS_GITHUB, LOGOUT, REGISTER_FAIL, REGISTER_REQUEST, REGISTER_SUCCESS } from "./actionTypes";
 import axios from 'axios'
 export const login = (data,toast) => (dispatch) => {
   // Complete login logic here
@@ -64,4 +64,31 @@ export const logout = (toast)=>(dispatch)=>{
       isClosable: true,
       position : "top"
   })
+}
+
+
+export const githubAuth =(toast)=>(dispatch)=>{
+    dispatch({type :LOGIN_SUCCESS_GITHUB});
+    axios.get(`https://webleader.onrender.com/auth/github`).then(res=>{
+      console.log(res.data.token);
+      dispatch({type : LOGIN_SUCCESS_GITHUB,payload : res.data.token});
+      toast({
+        title: 'Login GitHub Sucessfull',
+          description: "Login GitHub Sucessfull",
+          status: 'success',
+          duration: 4000,
+          isClosable: true,
+          position : "top"
+      })
+    }).catch((err)=>{
+      dispatch({type : LOGIN_FAIL_GITHUB});
+      toast({
+        title: 'Something went wrong',
+          description: "Something went wrong",
+          status: 'err',
+          duration: 4000,
+          isClosable: true,
+          position : "top"
+      })
+    })
 }
