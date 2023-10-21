@@ -23,7 +23,7 @@ To run this project locally, follow these steps:
     cd webleader_assignment
     ```
 
-3. Install dependencies:
+3. Install dependencies backend and fronend also:
 
     ```bash
     npm install
