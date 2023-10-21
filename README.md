@@ -49,10 +49,10 @@ To run this project locally, follow these steps:
 
 ## Folder Structure
 
-- `src/`: Contains the source code of the application.
-  - `components/`: Contains React components.
-  - `styles/`: Contains CSS stylesheets.
-  - `...` [Add more folders as needed]
+- `webledger-assignment`: Contains the source code of the application.
+  - `frontend/`: Contains React components.
+  - `backend/`: Contains Node express mongdb.
+
 
 ## Contributing
 
