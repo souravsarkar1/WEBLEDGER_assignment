@@ -40,7 +40,8 @@ To run this project locally, follow these steps:
     npm run server
     ```
 
-    The application will be accessible at `http://localhost:3000`.
+    The application will be accessible at `http://localhost:3000` (frontend).
+    The application will be accessible at `http://localhost:4500` (backend).
 
 ## Features
 
